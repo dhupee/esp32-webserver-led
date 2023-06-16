@@ -1,6 +1,6 @@
 # esp32-webserver-led
 
-Credit always goes to the original blog of [LastMinuteEngineer](https://lastminuteengineers.com/creating-esp32-web-server-arduino-ide/) on Create A Simple ESP32 Web Server In Arduino IDE
+Credit always goes to the original blog of [LastMinuteEngineer](https://lastminuteengineers.com/creating-esp32-web-server-arduino-ide/) on Create A Simple ESP32 Web Server In Arduino IDE with some editing to make me comfortable to read it.
 
 His code does have two version, for In Station Mode(STA Mode) where ESP32 actually connects with WiFi Router, and Access Point Mode(AP Mode) where the ESP32 actually is the WiFi Router.
 
