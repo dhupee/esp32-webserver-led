@@ -13,26 +13,26 @@
 #define STA_MODE
 // #define AP_MODE
 
-const char* ssid = SECRET_SSID;  // Your WiFi network SSID
-const char* password = SECRET_PASS;  // Your WiFi network password
+const char* ssid = SECRET_SSID; // Your WiFi network SSID
+const char* password = SECRET_PASS; // Your WiFi network password
 
 #ifdef AP_MODE
 /* Put IP Address details */
-IPAddress local_ip(192, 168, 1, 1);  // IP address of the access point
-IPAddress gateway(192, 168, 1, 1);  // Gateway IP address
-IPAddress subnet(255, 255, 255, 0);  // Subnet mask
+IPAddress local_ip(192, 168, 1, 1); // IP address of the access point
+IPAddress gateway(192, 168, 1, 1); // Gateway IP address
+IPAddress subnet(255, 255, 255, 0); // Subnet mask
 #endif
 
 WebServer server(80); // Create a WebServer object listening on port 80 (default HTTP port)
 
-uint8_t led1Pin = 2;  // Pin number for LED1
-bool led1State = LOW;  // Initial state of LED1 (OFF)
+uint8_t led1Pin = 2; // Pin number for LED1
+bool led1State = LOW; // Initial state of LED1 (OFF)
 
-uint8_t led2Pin = 4;  // Pin number for LED2
-bool led2State = LOW;  // Initial state of LED2 (OFF)
+uint8_t led2Pin = 4; // Pin number for LED2
+bool led2State = LOW; // Initial state of LED2 (OFF)
 
-int blinkAmount = 5;  // Number of times to blink the LEDs
-int blinkDelay = 500;  // Delay between each blink (in milliseconds)
+int blinkAmount = 5; // Number of times to blink the LEDs
+int blinkDelay = 500; // Delay between each blink (in milliseconds)
 
 // Function to generate and return the HTML page for controlling LEDs
 String sendHTML(uint8_t led1Stat, uint8_t led2Stat)
@@ -88,16 +88,16 @@ String sendHTML(uint8_t led1Stat, uint8_t led2Stat)
 // Handler for the root URL ("/")
 void handleRoot()
 {
-    led1State = LOW;  // Set LED1 state to OFF
-    led2State = LOW;  // Set LED2 state to OFF
+    led1State = LOW; // Set LED1 state to OFF
+    led2State = LOW; // Set LED2 state to OFF
     Serial.println("GPIO4 Status: OFF | GPIO5 Status: OFF");
-    server.send(200, "text/html", sendHTML(led1State, led2State));  // Send the HTML page to the client
+    server.send(200, "text/html", sendHTML(led1State, led2State)); // Send the HTML page to the client
 }
 
 // Handler for turning LED1 ON
 void handleLED1On()
 {
-    led1State = HIGH;  // Set LED1 state to ON
+    led1State = HIGH; // Set LED1 state to ON
     Serial.println("GPIO4 Status: ON");
     server.send(200, "text/html", sendHTML(led1State, led2State));
 }
@@ -105,7 +105,7 @@ void handleLED1On()
 // Handler for turning LED1 OFF
 void handleLED1Off()
 {
-    led1State = LOW;  // Set LED1 state to OFF
+    led1State = LOW; // Set LED1 state to OFF
     Serial.println("GPIO4 Status: OFF");
     server.send(200, "text/html", sendHTML(led1State, led2State));
 }
@@ -113,7 +113,7 @@ void handleLED1Off()
 // Handler for turning LED2 ON
 void handleLED2On()
 {
-    led2State = HIGH;  // Set LED2 state to ON
+    led2State = HIGH; // Set LED2 state to ON
     Serial.println("GPIO5 Status: ON");
     server.send(200, "text/html", sendHTML(led1State, led2State));
 }
@@ -121,7 +121,7 @@ void handleLED2On()
 // Handler for turning LED2 OFF
 void handleLED2Off()
 {
-    led2State = LOW;  // Set LED2 state to OFF
+    led2State = LOW; // Set LED2 state to OFF
     Serial.println("GPIO5 Status: OFF");
     server.send(200, "text/html", sendHTML(led1State, led2State));
 }
@@ -132,8 +132,8 @@ void handleBlink()
     String blinkAmountStr = server.arg("amount");
     String blinkDelayStr = server.arg("delay");
 
-    blinkAmount = blinkAmountStr.toInt();  // Convert string to integer
-    blinkDelay = blinkDelayStr.toInt();  // Convert string to integer
+    blinkAmount = blinkAmountStr.toInt(); // Convert string to integer
+    blinkDelay = blinkDelayStr.toInt(); // Convert string to integer
 
     Serial.print("Blink Amount: ");
     Serial.println(blinkAmount);
@@ -141,8 +141,8 @@ void handleBlink()
     Serial.println(blinkDelay);
 
     for (int i = 0; i < blinkAmount; i++) {
-        led1State = !led1State;  // Toggle LED1 state
-        led2State = !led2State;  // Toggle LED2 state
+        led1State = !led1State; // Toggle LED1 state
+        led2State = !led2State; // Toggle LED2 state
         digitalWrite(led1Pin, led1State);
         digitalWrite(led2Pin, led2State);
         delay(blinkDelay);
@@ -154,7 +154,7 @@ void handleBlink()
 // Handler for handling requests to unknown URLs
 void handleNotFound()
 {
-    server.send(404, "text/plain", "Not found");
+    server.send(404, "text/html, ", "Not found <a href='/'>home</a>");
 }
 
 void setup()
@@ -165,15 +165,15 @@ void setup()
     pinMode(led2Pin, OUTPUT);
 
 #ifdef AP_MODE
-    WiFi.softAP(ssid, password);  // Start the Access Point with the specified SSID and password
-    WiFi.softAPConfig(local_ip, gateway, subnet);  // Set the IP address, gateway, and subnet mask for the Access Point
+    WiFi.softAP(ssid, password); // Start the Access Point with the specified SSID and password
+    WiFi.softAPConfig(local_ip, gateway, subnet); // Set the IP address, gateway, and subnet mask for the Access Point
     Serial.println("Access Point Created");
     delay(100);
 #endif
 
 #ifdef STA_MODE
-    WiFi.begin(ssid, password);  // Connect to your local Wi-Fi network
-    while (WiFi.status() != WL_CONNECTED) {  // Wait for the Wi-Fi connection
+    WiFi.begin(ssid, password); // Connect to your local Wi-Fi network
+    while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi connection
         delay(1000);
         Serial.print(".");
     }
@@ -181,25 +181,26 @@ void setup()
     Serial.print("Connected to ");
     Serial.println(ssid);
     Serial.print("Got IP: ");
-    Serial.println(WiFi.localIP());  // Print the assigned local IP address
+    Serial.println(WiFi.localIP()); // Print the assigned local IP address
 #endif
 
     // Set up request handlers
-    server.on("/", handleRoot);
-    server.on("/led1on", handleLED1On);
+    server.on("/", handleRoot); // ("/")
+    server.on("/led1on", handleLED1On); // ("/led1on")
     server.on("/led1off", handleLED1Off);
     server.on("/led2on", handleLED2On);
     server.on("/led2off", handleLED2Off);
-    server.on("/blink", handleBlink);
+    server.on("/blink", handleBlink); // ("/blink?amount=10&delay=100")
+
     server.onNotFound(handleNotFound);
 
-    server.begin();  // Start the HTTP server
+    server.begin(); // Start the HTTP server
     Serial.println("HTTP server started");
 }
 
 void loop()
 {
-    server.handleClient();  // Handle incoming client requests
-    digitalWrite(led1Pin, led1State);  // Update LED1 state
-    digitalWrite(led2Pin, led2State);  // Update LED2 state
+    server.handleClient(); // Handle incoming client requests
+    digitalWrite(led1Pin, led1State); // Update LED1 state
+    digitalWrite(led2Pin, led2State); // Update LED2 state
 }
