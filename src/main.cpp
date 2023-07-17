@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include <WebServer.h>
+#include <WebServer.h>  
 #include <WiFi.h>
+#include <ESPmDNS.h>
 
 /*
   create this header file on the 'src' folder, inside add this text:
@@ -10,8 +11,8 @@
 #include "secrets.h"
 
 // Uncomment mode that you want to use
-#define STA_MODE
-// #define AP_MODE
+//define STA_MODE
+#define AP_MODE
 
 const char* ssid = SECRET_SSID; // Your WiFi network SSID
 const char* password = SECRET_PASS; // Your WiFi network password
@@ -184,6 +185,15 @@ void setup()
     Serial.println(WiFi.localIP()); // Print the assigned local IP address
 #endif
 
+    // mDNS might not work depend on your broadband, try use APmode
+    if (!MDNS.begin("serverexample")) {
+            Serial.println("Error setting up MDNS responder!");
+            while(1) {
+                delay(1000);
+            }
+        }
+    Serial.println("mDNS responder started");
+
     // Set up request handlers
     server.on("/", handleRoot); // ("/")
     server.on("/led1on", handleLED1On); // ("/led1on")
@@ -196,6 +206,7 @@ void setup()
 
     server.begin(); // Start the HTTP server
     Serial.println("HTTP server started");
+
 }
 
 void loop()
